@@ -8,11 +8,12 @@ export interface User {
 
 interface UserFormProps {
   user?: User;
+  isOpen: boolean;
   onSave: (user: User) => void;
   onCancel: () => void;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ user, onSave, onCancel }) => {
+const UserForm: React.FC<UserFormProps> = ({ user, isOpen, onSave, onCancel }) => {
   const [name, setName] = useState(user?.name || "");
   const [phone, setPhone] = useState(user?.phone || "");
 
@@ -22,10 +23,23 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSave, onCancel }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 bg-opacity-40 flex items-center justify-center z-50">
+    <div
+      className={`fixed inset-0 flex items-center justify-center z-50
+        transition-opacity duration-300
+        ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+    >
+      {/* backdrop */}
+      <div
+        className={`absolute inset-0 bg-black/60 transition-opacity duration-300
+          ${isOpen ? "opacity-100" : "opacity-0"}`}
+        onClick={onCancel}
+      />
+      {/* modal content */}
       <form
-        className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md flex flex-col gap-4"
         onSubmit={handleSubmit}
+        className={`relative bg-white rounded-lg shadow-lg p-8 w-full max-w-md flex flex-col gap-4
+          transform transition-all duration-300 ease-out
+          ${isOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-4"}`}
       >
         <h2 className="text-xl font-bold mb-2 text-gray-800">
           {user ? "Sửa người dùng" : "Thêm người dùng"}

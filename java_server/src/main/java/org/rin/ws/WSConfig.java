@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -78,7 +79,7 @@ public class WSConfig {
      * Xử lý message từ client - CHỈ XỬ LÝ STOMP
      */
     public void onMessage(WsContext ctx, String message) {
-        log.info("Received message: {}", message);
+//        log.info("Received message: {}", message);
 
         // CHỈ XỬ LÝ STOMP FRAMES
         if (isStompFrame(message)) {
@@ -162,7 +163,7 @@ public class WSConfig {
             String sessionId = ctx.sessionId();
             subscribeToTopic(sessionId, destination);
 
-            // Lưu subscription ID
+            // Lưu subscription ID toi
             String key = sessionId + ":" + subscriptionId;
             subscriptionIds.put(key, destination);
         }
@@ -343,10 +344,12 @@ public class WSConfig {
                                 "destination:" + topic + "\n" +
                                 "content-type:application/json\n" +
                                 "message-id:" + UUID.randomUUID() + "\n" +
-                                "subscription:" + subscriptionId + "\n" + // ← THÊM HEADER NÀY
-                                "content-length:" + jsonString.length() + "\n" +
+                                "subscription:" + subscriptionId + "\n" +
+                                "content-length:" + jsonString.getBytes(StandardCharsets.UTF_8).length + "\n" +
                                 "\n" +
-                                jsonString + "\n";
+                                jsonString + "\n" +
+                                "\0";
+//                        log.info(stompMessage);
 
                         ctx.send(stompMessage);
                         log.info("✅ Sent to {} with subscription: {}", topic, subscriptionId);

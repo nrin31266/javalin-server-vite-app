@@ -128,7 +128,8 @@ const Management: React.FC = () => {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Quản lý người dùng</h1>
           <button
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+            className="bg-blue-600 transform transition text-white px-4 py-2 rounded shadow hover:bg-blue-700 duration-200 hover:scale-105 hover:shadow-lg
+         active:scale-95 ease-in-out"
             onClick={handleAdd}
           >
             Thêm người dùng
@@ -171,13 +172,12 @@ const Management: React.FC = () => {
           {/* <button onClick={() => navigate("/test")}>Go to Test Page</button> */}
         </div>
       </div>
-      {showForm && (
-        <UserForm
+      <UserForm
           user={editingUser}
           onSave={handleSave}
           onCancel={handleCancel}
+          isOpen={showForm}  // Pass the isOpen prop to control modal visibility
         />
-      )}
       <ConfirmDialog
         open={confirmOpen}
         title="Xác nhận xoá người dùng"
